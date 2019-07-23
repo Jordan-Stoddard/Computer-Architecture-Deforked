@@ -21,29 +21,49 @@ class CPU:
     def load(self):
         """Load a program into memory."""
 
-        address = 0
+        # address = 0
 
-        # For now, we've just hardcoded a program:
+        # # For now, we've just hardcoded a program:
 
-        program = [
-            # From print8.ls8
-            0b10000010,  # LDI R0,8
-            0b00000000,
-            0b00001000,
-            0b01000111,  # PRN R0
-            0b00000000,
-            0b00000001,  # HLT
-        ]
+        # program = [
+        #     # From print8.ls8
+        #     0b10000010,  # LDI R0,8
+        #     0b00000000,
+        #     0b00001000,
+        #     0b01000111,  # PRN R0
+        #     0b00000000,
+        #     0b00000001,  # HLT
+        # ]
 
-        for instruction in program:
-            self.ram[address] = instruction
-            address += 1
+        # for instruction in program:
+        #     self.ram[address] = instruction
+        #     address += 1
+
+        if len(sys.argv) != 2:
+            print(f'usage: {sys.argv[0]} <filename>')
+            sys.exit(1)
+
+        try:
+            with open(sys.argv[1]) as f:
+                address = 0
+                for line in f:
+                    num = line.split('#', 1)[0]
+                    if num.strip() == '':
+                        continue
+                    
+                    self.ram[address] = int(num, 2)
+                    address += 1
+                    
+        except FileNotFoundError:
+            print(f'{sys.argv[0]}: {sys.argv[1]} not found.')
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
 
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
+        elif op == "MUL":
+            self.reg[reg_a] = self.reg[reg_a] * self.reg[reg_b]
         # elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
@@ -73,18 +93,24 @@ class CPU:
         LDI = 0b10000010
         PRN = 0b01000111
         HLT = 0b00000001
+        MUL = 0b10100010
         running = True
-
+        
         while running:
             IR = self.ram[self.pc]
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
+            num_operands = (IR & 0b11000000) >> 6
+            dist_to_move_pc = num_operands + 1
             if IR == LDI:
                 self.reg[operand_a] = operand_b
-                self.pc += 3
+                self.pc += dist_to_move_pc
             elif IR == PRN:
                 print(self.reg[operand_a])
-                self.pc += 2
+                self.pc += dist_to_move_pc
+            elif IR == MUL:
+                self.alu('MUL', operand_a, operand_b)
+                self.pc += dist_to_move_pc
             elif IR == HLT:
                 running = False
                 sys.exit(1)

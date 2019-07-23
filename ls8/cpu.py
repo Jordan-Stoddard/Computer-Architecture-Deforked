@@ -21,6 +21,8 @@ class CPU:
         self.branchtable[HLT] = self.handle_HLT
         self.branchtable[MUL] = self.handle_MUL
 
+# A function that takes in the current instruction and runs them in O(1) against our branchtable, 
+# based on what the current instruction is.
     def handle_operations(self, IR, operand_a, operand_b, distance):
         if IR == LDI:
             self.branchtable[IR](operand_a, operand_b, distance)
@@ -32,22 +34,27 @@ class CPU:
             self.branchtable[IR]()
 
 
+    # A helper function that performs MUL per the ls8 spec.
     def handle_MUL(self, operand_a, operand_b, distance):
         self.alu('MUL', operand_a, operand_b)
         self.pc += distance
 
+    # A helper function that performs HLT per the ls8 spec.
     def handle_HLT(self):
         running = False
         return sys.exit(1)
 
+    # A helper function that performs PRN per the ls8 spec.
     def handle_PRN(self, operand_a, distance):
         print(self.reg[operand_a])
         self.pc += distance
 
+    # A helper function that performs LDI per the ls8 spec.
     def handle_LDI(self, operand_a, operand_b, distance):
         self.reg[operand_a] = operand_b
         self.pc += distance
 
+    # Gets the current ram value of the current MAR.
     def ram_read(self, MAR):
         return self.ram[MAR]
 
@@ -112,9 +119,16 @@ class CPU:
         running = True
         
         while running:
+            # Gets the current instruction from RAM
             IR = self.ram[self.pc]
+            # Sets the first operand from ram (operand is a like a variable)
             operand_a = self.ram_read(self.pc + 1)
+            # sets the second operand from ram (operand is like a variable)
             operand_b = self.ram_read(self.pc + 2)
+            # gets the number of operands by using bitwise-AND to parse our instruction.
             num_operands = (IR & 0b11000000) >> 6
+            # gets the number of operations that the pc will need to be incremented.
             dist_to_move_pc = num_operands + 1
+            # A function that takes in the current instruction and runs them in O(1) against our branchtable, 
+            # based on what the current instruction is.
             self.handle_operations(IR, operand_a, operand_b, dist_to_move_pc)

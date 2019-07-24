@@ -40,6 +40,8 @@ class CPU:
             self.branchtable[IR](operand_a, operand_b, distance)
         elif IR == PUSH:
             self.branchtable[IR](operand_a, distance)
+        elif IR == POP:
+            self.branchtable[IR](operand_a, distance)
         elif IR == HLT:
             self.branchtable[IR]()
 

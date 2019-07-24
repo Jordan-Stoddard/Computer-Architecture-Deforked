@@ -5,6 +5,8 @@ PRN = 0b01000111
 LDI = 0b10000010
 HLT = 0b00000001
 MUL = 0b10100010
+PUSH = 0b01000101
+POP = 0b01000110
 
 
 class CPU:
@@ -20,6 +22,7 @@ class CPU:
         self.branchtable[LDI] = self.handle_LDI
         self.branchtable[HLT] = self.handle_HLT
         self.branchtable[MUL] = self.handle_MUL
+        self.SP = 7
 
 # A function that takes in the current instruction and runs them in O(1) against our branchtable, 
 # based on what the current instruction is.
@@ -131,4 +134,5 @@ class CPU:
             dist_to_move_pc = num_operands + 1
             # A function that takes in the current instruction and runs them in O(1) against our branchtable, 
             # based on what the current instruction is.
+            print(int('0xF3', 16))
             self.handle_operations(IR, operand_a, operand_b, dist_to_move_pc)

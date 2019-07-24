@@ -9,6 +9,7 @@ PUSH = 0b01000101
 POP = 0b01000110
 
 
+
 class CPU:
     """Main CPU class."""
 
@@ -23,7 +24,9 @@ class CPU:
         self.branchtable[HLT] = self.handle_HLT
         self.branchtable[MUL] = self.handle_MUL
         self.SP = 7
-
+        # sets the stack pointer register's value to be 244 AKA 0xF4
+        self.stackPointer = self.reg[self.SP] = 244
+        
 # A function that takes in the current instruction and runs them in O(1) against our branchtable, 
 # based on what the current instruction is.
     def handle_operations(self, IR, operand_a, operand_b, distance):
@@ -134,5 +137,4 @@ class CPU:
             dist_to_move_pc = num_operands + 1
             # A function that takes in the current instruction and runs them in O(1) against our branchtable, 
             # based on what the current instruction is.
-            print(int('0xF3', 16))
             self.handle_operations(IR, operand_a, operand_b, dist_to_move_pc)

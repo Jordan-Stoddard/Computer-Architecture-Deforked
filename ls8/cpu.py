@@ -23,10 +23,12 @@ class CPU:
         self.branchtable[LDI] = self.handle_LDI
         self.branchtable[HLT] = self.handle_HLT
         self.branchtable[MUL] = self.handle_MUL
+        self.branchtable[PUSH] = self.handle_PUSH
+        self.branchtable[POP] = self.handle_POP
         self.SP = 7
         # sets the stack pointer register's value to be 244 AKA 0xF4
-        self.stackPointer = self.reg[self.SP] = 244
-        
+        self.stack_pointer = self.reg[self.SP] = 244
+
 # A function that takes in the current instruction and runs them in O(1) against our branchtable, 
 # based on what the current instruction is.
     def handle_operations(self, IR, operand_a, operand_b, distance):
@@ -36,9 +38,20 @@ class CPU:
             self.branchtable[IR](operand_a, distance)
         elif IR == MUL:
             self.branchtable[IR](operand_a, operand_b, distance)
+        elif IR == PUSH:
+            self.branchtable[IR](operand_a, distance)
         elif IR == HLT:
             self.branchtable[IR]()
 
+    def handle_POP(self, operand_a, distance):
+        self.reg[operand_a] = self.ram[self.stack_pointer]
+        self.stack_pointer += 1
+        self.pc += distance
+
+    def handle_PUSH(self, operand_a, distance):
+        self.stack_pointer -= 1
+        self.ram[self.stack_pointer] = self.reg[operand_a]
+        self.pc += distance
 
     # A helper function that performs MUL per the ls8 spec.
     def handle_MUL(self, operand_a, operand_b, distance):

@@ -1,10 +1,10 @@
-# My program
-
-
-1   # PRINT_BEEJ
-4   # SAVE REGISTER 77,2
-77  # store 77
-2   # in register 2
-5   # PRINT_REGISTER
-2   # print value in register 2
-2   # HALT
+4       # SAVE_REGISTER 99,R2
+99
+2
+6       # PUSH R2
+2
+7       # POP R1
+1
+5       # PRINT_REGISTER R1
+1
+2       # HALT

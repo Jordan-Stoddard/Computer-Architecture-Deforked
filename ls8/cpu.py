@@ -45,11 +45,13 @@ class CPU:
         elif IR == HLT:
             self.branchtable[IR]()
 
+    # A helper function that performs POP per the ls8 spec.
     def handle_POP(self, operand_a, distance):
         self.reg[operand_a] = self.ram[self.stack_pointer]
         self.stack_pointer += 1
         self.pc += distance
 
+    # A helper function that performs PUSH per the ls8 spec.
     def handle_PUSH(self, operand_a, distance):
         self.stack_pointer -= 1
         self.ram[self.stack_pointer] = self.reg[operand_a]

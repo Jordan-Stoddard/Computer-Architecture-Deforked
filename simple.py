@@ -5,10 +5,14 @@ HALT = 2
 PRINT_NUM = 3
 SAVE_REGISTER = 4
 PRINT_REGISTER = 5
+PUSH = 6
+POP = 7
 
 memory = [0] * 128 # 128 bits of memory
 
 registers = [0] * 8  # 8 registers
+
+SP = 7
 
 pc = 0  # Program Counter -- Pointer to currently-executing instruction
 
@@ -32,6 +36,8 @@ except FileNotFoundError:
     print(f"{sys.argv[0]}: {sys.argv[1]} not found")
     sys.exit(2)
 
+registers[SP] = 127
+
 while running:
     command = memory[pc]
 
@@ -52,6 +58,20 @@ while running:
     elif command == PRINT_REGISTER:
         regnum = memory[pc+1]
         print(registers[regnum])
+        pc += 2
+
+    elif command == PUSH:
+        registers[SP] -= 1                  # decrement stack pointer
+        regnum = memory[pc+1]               # get the register number operand
+        value = registers[regnum]           # get the value from that register
+        memory[registers[SP]] = value       # store the value in memory at the stack pointer
+        pc += 2
+
+    elif command == POP:
+        value = memory[registers[SP]]       # get value from the memory at AT
+        regnum = memory[pc+1]               # get register number opeand
+        registers[regnum] = value           # store the value from the register value
+        registers[SP] += 1                  
         pc += 2
 
     elif command == PRINT_NUM:

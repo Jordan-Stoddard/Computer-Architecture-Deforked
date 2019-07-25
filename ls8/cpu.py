@@ -47,14 +47,19 @@ class CPU:
         elif IR == POP:
             self.branchtable[IR](operand_a, distance)
         elif IR == CALL:
-            self.branchtable[IR]()
+            self.branchtable[IR](operand_a)
         elif IR == RET: 
             self.branchtable[IR]()
         elif IR == HLT:
             self.branchtable[IR]()
 
-    def handle_CALL():
-        pass
+    
+
+    def handle_CALL(self, operand_a, ):
+        return_address = self.pc + 2
+        self.stack_pointer -= 1
+        self.ram[stack_pointer] = return_address
+        self.pc = self.reg[operand_a]
 
     # A helper function that performs POP per the ls8 spec.
     def handle_POP(self, operand_a, distance):

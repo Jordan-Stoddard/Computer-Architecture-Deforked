@@ -57,7 +57,7 @@ class CPU:
         self.pc = self.ram[self.stack_pointer]
         self.stack_pointer -= 1
 
-    def handle_CALL(self, operand_a, ):
+    def handle_CALL(self, operand_a):
         return_address = self.pc + 2
         self.stack_pointer -= 1
         self.ram[stack_pointer] = return_address

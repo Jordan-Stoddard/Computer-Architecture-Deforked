@@ -53,7 +53,9 @@ class CPU:
         elif IR == HLT:
             self.branchtable[IR]()
 
-    
+    def handle_RET(self):
+        self.pc = self.ram[self.stack_pointer]
+        self.stack_pointer -= 1
 
     def handle_CALL(self, operand_a, ):
         return_address = self.pc + 2

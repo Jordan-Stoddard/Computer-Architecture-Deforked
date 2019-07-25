@@ -9,6 +9,7 @@ PUSH = 0b01000101
 POP = 0b01000110
 CALL = 0b01010000
 RET = 0b00010001
+ADD = 0b10100000
 
 
 
@@ -29,6 +30,7 @@ class CPU:
         self.branchtable[POP] = self.handle_POP
         self.branchtable[CALL] = self.handle_CALL
         self.branchtable[RET] = self.handle_RET
+        self.branchtable[ADD] = self.handle_ADD
         self.SP = 7
         # sets the stack pointer register's value to be 244 AKA 0xF4
         self.stack_pointer = self.reg[self.SP] = 244
@@ -54,13 +56,15 @@ class CPU:
             self.branchtable[IR]()
 
     def handle_RET(self):
+        print('we go into ret')
         self.pc = self.ram[self.stack_pointer]
+        print(self.pc)
         self.stack_pointer -= 1
 
     def handle_CALL(self, operand_a):
         return_address = self.pc + 2
         self.stack_pointer -= 1
-        self.ram[stack_pointer] = return_address
+        self.ram[self.stack_pointer] = return_address
         self.pc = self.reg[operand_a]
 
     # A helper function that performs POP per the ls8 spec.
@@ -158,7 +162,7 @@ class CPU:
     def run(self):
         """Run the CPU."""
         running = True
-        
+        # print(0b00011000)
         while running:
             # Gets the current instruction from RAM
             IR = self.ram[self.pc]

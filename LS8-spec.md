@@ -177,7 +177,7 @@ Glossary:
 * `00000aaa`: Register number
 * `00000bbb`: Register number
 
-Machine code values shown in both binary and hexadecimal.
+Machine code values shown in both binary and hexadecimal
 
 ### ADD
 

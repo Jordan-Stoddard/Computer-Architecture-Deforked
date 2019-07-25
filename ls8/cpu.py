@@ -7,6 +7,8 @@ HLT = 0b00000001
 MUL = 0b10100010
 PUSH = 0b01000101
 POP = 0b01000110
+CALL = 0b01010000
+RET = 0b00010001
 
 
 
@@ -25,6 +27,8 @@ class CPU:
         self.branchtable[MUL] = self.handle_MUL
         self.branchtable[PUSH] = self.handle_PUSH
         self.branchtable[POP] = self.handle_POP
+        self.branchtable[CALL] = self.handle_CALL
+        self.branchtable[RET] = self.handle_RET
         self.SP = 7
         # sets the stack pointer register's value to be 244 AKA 0xF4
         self.stack_pointer = self.reg[self.SP] = 244
@@ -42,8 +46,15 @@ class CPU:
             self.branchtable[IR](operand_a, distance)
         elif IR == POP:
             self.branchtable[IR](operand_a, distance)
+        elif IR == CALL:
+            self.branchtable[IR]()
+        elif IR == RET: 
+            self.branchtable[IR]()
         elif IR == HLT:
             self.branchtable[IR]()
+
+    def handle_CALL():
+        pass
 
     # A helper function that performs POP per the ls8 spec.
     def handle_POP(self, operand_a, distance):

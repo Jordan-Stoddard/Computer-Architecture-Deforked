@@ -52,13 +52,17 @@ class CPU:
             self.branchtable[IR](operand_a)
         elif IR == RET: 
             self.branchtable[IR]()
+        elif IR == ADD:
+            self.branchtable[IR](operand_a, operand_b, distance)
         elif IR == HLT:
             self.branchtable[IR]()
 
+    def handle_ADD(self, operand_a, operand_b, distance):
+        self.alu('ADD', operand_a, operand_b)
+        self.pc += distance
+
     def handle_RET(self):
-        print('we go into ret')
         self.pc = self.ram[self.stack_pointer]
-        print(self.pc)
         self.stack_pointer -= 1
 
     def handle_CALL(self, operand_a):

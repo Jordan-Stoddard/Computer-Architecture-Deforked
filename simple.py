@@ -7,6 +7,8 @@ SAVE_REGISTER = 4
 PRINT_REGISTER = 5
 PUSH = 6
 POP = 7
+CALL = 8
+RET = 9
 
 memory = [0] * 128 # 128 bits of memory
 
@@ -78,6 +80,25 @@ while running:
         operand = memory[pc + 1]
         print(operand)
         pc += 2
+
+    elif command == CALL:
+        # get the address of the instrruction right after this CALL inst
+        return_addr = pc + 2
+
+        # push the return address on the stack
+        registers[SP] -= 1                         # decrement stack pointe
+        memory[registers[SP]] = return_addr      # store the value in memory at the stack pointer
+        
+        #set the PC to the subroutine address
+        regnum = memory[pc + 1]
+        subroutine_address = registers[regnum]
+        pc = subroutine_address
+
+    elif command == RET:
+        return_addr = memory[registers[SP]]
+        registers[SP] += 1
+
+        pc = return_addr
 
     else:
         print(f'unknown instruction {command}')

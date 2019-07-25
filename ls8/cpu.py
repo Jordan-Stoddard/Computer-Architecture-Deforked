@@ -57,14 +57,17 @@ class CPU:
         elif IR == HLT:
             self.branchtable[IR]()
 
+    # A helper function that performs ADD per the ls8 spec.
     def handle_ADD(self, operand_a, operand_b, distance):
         self.alu('ADD', operand_a, operand_b)
         self.pc += distance
 
+    # A helper function that performs RET per the ls8 spec.
     def handle_RET(self):
         self.pc = self.ram[self.stack_pointer]
         self.stack_pointer -= 1
 
+    # A helper function that performs CALL per the ls8 spec.
     def handle_CALL(self, operand_a):
         return_address = self.pc + 2
         self.stack_pointer -= 1
